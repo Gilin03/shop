@@ -1,0 +1,21 @@
+<!-- editMember.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Member</title>
+</head>
+<body>
+<h1>회원 정보 수정</h1>
+<form th:action="@{/members/update}" method="post">
+  <input type="hidden" th:name="id" th:value="${member.id}" />
+  <label for="name">이름:</label>
+  <input type="text" th:name="name" th:value="${member.name}" /><br/>
+  <label for="email">이메일:</label>
+  <input type="text" th:name="email" th:value="${member.email}" /><br/>
+  <label for="address">주소:</label>
+  <input type="text" th:name="address" th:value="${member.address}" /><br/>
+  <input type="submit" value="수정" />
+</form>
+</body>
+</html>
