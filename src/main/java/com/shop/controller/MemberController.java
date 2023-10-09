@@ -90,6 +90,12 @@ public class MemberController {
         return "redirect:/members/manage";
     }
 
+    @GetMapping("/delete/{id}")
+    public String deleteMember(@PathVariable Long id) {
+        memberService.deleteMember(id);
+        return "redirect:/members/manage";
+    }
+
 
 
 }

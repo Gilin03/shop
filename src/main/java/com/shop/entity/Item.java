@@ -9,6 +9,9 @@ import jakarta.persistence.*;
 import com.shop.dto.ItemFormDto;
 import com.shop.exception.OutOfStockException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name="item")
 @Getter
@@ -36,6 +39,9 @@ public class Item extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; //상품 판매 상태
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CommentEntity> commentEntityList = new ArrayList<>();
 
     public void updateItem(ItemFormDto itemFormDto){
         this.itemNm = itemFormDto.getItemNm();

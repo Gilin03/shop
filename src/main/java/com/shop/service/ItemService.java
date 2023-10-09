@@ -3,6 +3,7 @@ package com.shop.service;
 import com.shop.dto.ItemFormDto;
 import com.shop.entity.Item;
 import com.shop.entity.ItemImg;
+import com.shop.entity.Member;
 import com.shop.repository.ItemImgRepository;
 import com.shop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -96,5 +97,11 @@ public class ItemService {
     public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
         return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
+
+    public void deleteItem(Long itemId) {
+        itemRepository.deleteById(itemId);
+    }
+
+
 
 }

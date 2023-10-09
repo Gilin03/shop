@@ -11,6 +11,70 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+
+        const commentWrite = () => {
+            const writer = document.getElementById("commentWriter").value;
+            const contents = document.getElementById("commentContents").value;
+            console.log("작성자: ", writer);
+            console.log("내용: ", contents);
+            const id = [[${item.id}]];
+
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+
+            $.ajax({
+                type: "post",
+                url: "/comment/save",
+                data: {
+                    "commentWriter": writer,
+                    "commentContents": contents,
+                    "itemId": id
+                },
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (res) {
+                    console.log("요청성공", res);
+
+                    // 기존 댓글들을 지운다.
+                    $("#comment-list tr:not(:first)").remove();
+
+                    // 새로운 댓글을 테이블에 추가
+                    for (let i in res) {
+                        const comment = res[i];
+                        addCommentToTable(comment);
+                    }
+
+                    document.getElementById('commentWriter').value = '';
+                    document.getElementById('commentContents').value = '';
+                },
+                error: function (err) {
+                    console.log("요청실패", err);
+                    if(err.status === 401) {
+                        alert('로그인이 필요합니다.');
+                    }
+                }
+            });
+        }
+
+        const addCommentToTable = (comment) => {
+            const table = document.getElementById('comment-list');
+            const newRow = table.insertRow(-1);
+
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+            const cell4 = newRow.insertCell(3);
+
+            cell1.innerHTML = comment.id;
+            cell2.innerHTML = comment.commentWriter;
+            cell3.innerHTML = comment.commentContents;
+            cell4.innerHTML = comment.commentCreatedTime;
+        }
+
+
+
+
         $(document).ready(function(){
 
             calculateToalPrice();
@@ -107,6 +171,8 @@
             });
         }
 
+
+
     </script>
 </th:block>
 
@@ -195,6 +261,22 @@
     <div th:each="itemImg : ${item.itemImgDtoList}" class="text-center">
         <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
     </div>
+
+    <div id="comment-write">
+        <input type="text" id="commentWriter" placeholder="작성자">
+        <input type="text" id="commentContents" placeholder="내용">
+        <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
+    </div>
+
+    <table id="comment-list">
+        <tr>
+            <th>댓글번호</th>
+            <th>작성자</th>
+            <th>내용</th>
+            <th>작성시간</th>
+        </tr>
+        <!-- 기존 댓글 데이터가 있다면 서버로부터 받아 이곳에 렌더링 -->
+    </table>
 
 </div>
 

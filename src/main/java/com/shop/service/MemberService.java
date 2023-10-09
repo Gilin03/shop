@@ -72,4 +72,10 @@ public class MemberService implements UserDetailsService {
     }
 
 
+
+    public void deleteMember(Long id) {
+        Member memberToDelete = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다."));
+        memberRepository.delete(memberToDelete);
+    }
 }

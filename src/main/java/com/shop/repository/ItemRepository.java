@@ -1,9 +1,11 @@
 package com.shop.repository;
 
 import com.shop.entity.Item;
+import com.shop.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +22,8 @@ public interface ItemRepository extends JpaRepository<Item, Long>,
     List<Item> findByPriceLessThan(Integer price);
 
     List<Item> findByPriceLessThanOrderByPriceDesc(Integer price);
+
+    Optional<Item> findById(Long id);
 
     @Query("select i from Item i where i.itemDetail like " +
             "%:itemDetail% order by i.price desc")

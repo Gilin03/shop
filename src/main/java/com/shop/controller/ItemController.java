@@ -117,4 +117,20 @@ public class ItemController {
         return "item/itemDtl";
     }
 
+    @GetMapping(value = "/admin/item/delete/{itemId}")
+    public String deleteItem(@PathVariable("itemId") Long itemId, Model model){
+        try {
+            itemService.deleteItem(itemId);
+        } catch(EntityNotFoundException e){
+            model.addAttribute("errorMessage", "존재하지 않는 상품 입니다.");
+            return "error/404";
+        } catch(Exception e){
+            model.addAttribute("errorMessage", "상품 삭제 중 에러가 발생하였습니다.");
+            return "error/500";
+        }
+        return "redirect:/admin/items";
+    }
+
+
+
 }

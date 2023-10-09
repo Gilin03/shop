@@ -26,6 +26,13 @@
             + "&searchQuery=" + searchQuery;
         }
 
+        function deleteItem(itemId) {
+            if(confirm('정말로 이 상품을 삭제하시겠습니까?')) {
+                location.href = '/admin/item/delete/' + itemId;
+            }
+        }
+
+
     </script>
 </th:block>
 
@@ -60,6 +67,11 @@
                 <td th:text="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL} ? '판매중' : '품절'"></td>
                 <td th:text="${item.createdBy}"></td>
                 <td th:text="${item.regTime}"></td>
+
+                <td>
+                    <button type="button" class="btn btn-danger" th:onclick="'deleteItem(' + ${item.id} + ')'">삭제</button>
+                </td>
+
             </tr>
             </tbody>
         </table>
