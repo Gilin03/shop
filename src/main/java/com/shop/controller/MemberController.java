@@ -3,8 +3,8 @@ package com.shop.controller;
 import com.shop.dto.MemberFormDto;
 import com.shop.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;  // <- 수정된 부분
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
 
 import java.util.List;
+
 
 @RequestMapping("/members")
 @Controller
@@ -85,8 +86,40 @@ public class MemberController {
 
     // 회원 정보 수정 처리
     @PostMapping("/update")
-    public String updateMember(@ModelAttribute Member member) {
-        memberService.updateMember(member);
+    public String updateMember(@ModelAttribute Member member,
+                               String currentPassword,
+                               String password,
+                               String confirmPassword,
+                               Model model) {
+
+        Member existingMember = memberService.findById(member.getId());
+
+        // 현재 비밀번호 확인 로직
+        if (!passwordEncoder.matches(currentPassword, existingMember.getPassword())) {
+            model.addAttribute("errorMessage", "현재 비밀번호가 일치하지 않습니다.");
+            model.addAttribute("member", member); // 원래의 멤버 정보를 다시 모델에 추가
+            return "member/editMember";
+        }
+
+        // 새 비밀번호와 비밀번호 확인 일치 여부 확인 로직
+        if (password != null && !password.isEmpty()) {
+            if (!password.equals(confirmPassword)) {
+                model.addAttribute("errorMessage", "새 비밀번호가 일치하지 않습니다.");
+                model.addAttribute("member", member); // 원래의 멤버 정보를 다시 모델에 추가
+                return "member/editMember";
+            }
+            String encodedPassword = passwordEncoder.encode(password);
+            member.setPassword(encodedPassword);
+        }
+
+        try {
+            memberService.updateMember(member);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("member", member); // 원래의 멤버 정보를 다시 모델에 추가
+            return "member/editMember";
+        }
+
         return "redirect:/members/manage";
     }
 

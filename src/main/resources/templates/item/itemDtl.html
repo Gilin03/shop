@@ -217,7 +217,7 @@
                 판매중
             </span>
             <span th:unless="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL}" class="badge btn-danger mgb-15" >
-                품절
+                <품절></품절>
             </span>
             <div class="h4" th:text="${item.itemNm}"></div>
             <hr class="my-4">

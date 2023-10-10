@@ -10,6 +10,9 @@
   <p><strong>Name:</strong> <span th:text="${member.name}"></span></p>
   <p><strong>Email:</strong> <span th:text="${member.email}"></span></p>
   <p><strong>Address:</strong> <span th:text="${member.address}"></span></p>
+  <p>
+    <a th:href="@{/members/edit/{id}(id=${member.id})}">수정</a>
+  </p>
 </th:block>
 <th:block th:if="${member == null}">
   <p>로그인 후에 마이페이지를 확인할 수 있습니다.</p>
