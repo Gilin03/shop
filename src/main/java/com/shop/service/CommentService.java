@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,4 +42,30 @@ public class CommentService {
         }
         return commentDTOList;
     }
+
+    public CommentDTO findById(Long commentId) {
+        CommentEntity commentEntity = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        return CommentDTO.toCommentDTO(commentEntity, commentEntity.getItem().getId());
+    }
+
+    public List<CommentDTO> findByItemId(Long itemId) {
+        List<CommentEntity> commentEntities = commentRepository.findByItemId(itemId);
+
+        return commentEntities.stream()
+                .map(commentEntity -> CommentDTO.toCommentDTO(commentEntity, itemId))
+                .collect(Collectors.toList());
+    }
+
+    public CommentDTO update(Long id, CommentDTO commentDTO) throws Exception {
+        CommentEntity comment = commentRepository.findById(id)
+                .orElseThrow(() -> new Exception("Comment not found"));
+        comment.update(commentDTO);
+        commentRepository.save(comment);
+        return CommentDTO.fromEntity(comment);
+    }
+
+
+
+
 }

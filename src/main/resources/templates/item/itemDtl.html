@@ -276,12 +276,16 @@
 
         <table id="comment-list">
             <tr>
-
                 <th>작성자</th>
                 <th>내용</th>
-
+                <th>작업</th>
             </tr>
-            <!-- 기존 댓글 데이터가 있다면 서버로부터 받아 이곳에 렌더링 -->
+            <tr th:each="comment : ${comments}">
+                <td th:text="${comment.commentWriter}"></td>
+                <td th:text="${comment.commentContents}"></td>
+                <td>
+                    <a th:href="@{/comment/edit/{commentId}(commentId=${comment.id})}">수정</a>
+                </td>
         </table>
 
 </div>
