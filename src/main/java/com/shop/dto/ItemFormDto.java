@@ -1,5 +1,6 @@
 package com.shop.dto;
 
+import com.shop.constant.Category;
 import com.shop.constant.ItemSellStatus;
 import com.shop.entity.Item;
 import lombok.Getter;
@@ -27,6 +28,9 @@ public class ItemFormDto {
 
     @NotNull(message = "재고는 필수 입력 값입니다.")
     private Integer stockNumber;
+
+    private Category category;
+
 
     private ItemSellStatus itemSellStatus;
 

@@ -68,6 +68,13 @@
             </select>
         </div>
 
+        <div class="form-group">
+        <select th:field="*{category}" class="custom-select">
+            <option th:each="category : ${T(com.shop.constant.Category).values()}"
+                    th:value="${category}" th:text="${category.displayName}"></option>
+        </select>
+        </div>
+
         <div class="input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">상품명</span>

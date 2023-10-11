@@ -1,5 +1,6 @@
 package com.shop.entity;
 
+import com.shop.constant.Category;
 import com.shop.constant.ItemSellStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class Item extends BaseEntity {
     @Column(name="price", nullable = false)
     private int price; //가격
 
+
     @Column(nullable = false)
     private int stockNumber; //재고수량
 
@@ -40,6 +42,9 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; //상품 판매 상태
 
+    @Enumerated(EnumType.STRING)
+    private Category category; // 카테고리
+
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList = new ArrayList<>();
 
@@ -49,6 +54,7 @@ public class Item extends BaseEntity {
         this.stockNumber = itemFormDto.getStockNumber();
         this.itemDetail = itemFormDto.getItemDetail();
         this.itemSellStatus = itemFormDto.getItemSellStatus();
+        this.category = itemFormDto.getCategory();
     }
 
     public void removeStock(int stockNumber){
