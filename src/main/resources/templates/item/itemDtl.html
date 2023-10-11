@@ -11,11 +11,14 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        /*<![CDATA[*/
+        var userName = /*[[${member.name}]]*/ 'defaultUserName'; // 사용자 이름
+        /*]]>*/
 
         const commentWrite = () => {
-            const writer = document.getElementById("commentWriter").value;
+            // const writer = document.getElementById("commentWriter").value;
             const contents = document.getElementById("commentContents").value;
-            console.log("작성자: ", writer);
+            // console.log("작성자: ", writer);
             console.log("내용: ", contents);
             const id = [[${item.id}]];
 
@@ -26,7 +29,7 @@
                 type: "post",
                 url: "/comment/save",
                 data: {
-                    "commentWriter": writer,
+                    "commentWriter": userName,
                     "commentContents": contents,
                     "itemId": id
                 },
@@ -63,13 +66,10 @@
 
             const cell1 = newRow.insertCell(0);
             const cell2 = newRow.insertCell(1);
-            const cell3 = newRow.insertCell(2);
-            const cell4 = newRow.insertCell(3);
 
-            cell1.innerHTML = comment.id;
+
+            cell1.innerHTML = comment.commentContents;
             cell2.innerHTML = comment.commentWriter;
-            cell3.innerHTML = comment.commentContents;
-            cell4.innerHTML = comment.commentCreatedTime;
         }
 
 
@@ -262,21 +262,27 @@
         <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
     </div>
 
-    <div id="comment-write">
-        <input type="text" id="commentWriter" placeholder="작성자">
-        <input type="text" id="commentContents" placeholder="내용">
-        <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
-    </div>
 
-    <table id="comment-list">
-        <tr>
-            <th>댓글번호</th>
-            <th>작성자</th>
-            <th>내용</th>
-            <th>작성시간</th>
-        </tr>
-        <!-- 기존 댓글 데이터가 있다면 서버로부터 받아 이곳에 렌더링 -->
-    </table>
+<!--        <input type="text" id="commentWriter" placeholder="작성자">-->
+        <div id="comment-write">
+            <input type="text" id="commentContents" placeholder="내용">
+            <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
+        </div>
+
+
+        <p><strong>Name:</strong> <span th:text="${member.name}"></span></p>
+
+
+
+        <table id="comment-list">
+            <tr>
+
+                <th>작성자</th>
+                <th>내용</th>
+
+            </tr>
+            <!-- 기존 댓글 데이터가 있다면 서버로부터 받아 이곳에 렌더링 -->
+        </table>
 
 </div>
 
