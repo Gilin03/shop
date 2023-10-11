@@ -27,30 +27,36 @@
 
   <p id="passwordFeedback" style="color: red;"></p>
 
-  <script>
-    document.getElementById('currentPassword').addEventListener('input', function (e) {
-      // 여기에 AJAX 요청을 통해 서버의 비밀번호와 일치하는지 확인하는 코드를 넣을 수 있습니다.
-      // ...
-    });
+<script>
+  function changePassword() {
+    var userId = document.getElementById("userId").value;
+    var currentPassword = document.getElementById("currentPassword").value;
+    var newPassword = document.getElementById("newPassword").value;
+    var confirmPassword = document.getElementById("confirmPassword").value;
 
-    document.getElementById('confirmPassword').addEventListener('input', function (e) {
-      const password = document.getElementById('password').value;
-      const confirmPassword = e.target.value;
+    // 서버로 보낼 데이터를 준비합니다.
+    var data = {
+      userId: userId,
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword
+    };
 
-      if (password && confirmPassword && password !== confirmPassword) {
-        document.getElementById('passwordFeedback').innerText = '비밀번호가 일치하지 않습니다.';
-        // 폼 제출을 막습니다.
-        document.getElementById('updateForm').addEventListener('submit', function (event) {
-          event.preventDefault();
-        });
-      } else {
-        document.getElementById('passwordFeedback').innerText = '';
-        // 폼 제출 막기를 해제합니다.
-        document.getElementById('updateForm').removeEventListener('submit', function (event) {
-          event.preventDefault();
-        });
+    // AJAX를 사용하여 비밀번호 변경 요청을 서버로 보냅니다.
+    $.ajax({
+      type: "POST",
+      url: "/api/change-password", // 비밀번호 변경을 처리하는 백엔드 엔드포인트 URL
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      success: function (response) {
+        alert("비밀번호가 성공적으로 변경되었습니다.");
+        // 비밀번호 변경 성공 시 필요한 작업을 수행합니다.
+      },
+      error: function (error) {
+        alert("비밀번호 변경에 실패하였습니다: " + error.responseText);
       }
     });
-  </script>
+  }
+</script>
 </body>
 </html>
