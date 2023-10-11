@@ -6,15 +6,77 @@
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <style>
+        /* 테이블 스타일 */
+        #comment-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.15);
+        }
+        #comment-list th, #comment-list td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        #comment-list th {
+            background-color: #f8f8f8;
+        }
+        #comment-list tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* 댓글 작성자 스타일 */
+        #comment-list td:nth-child(1) {
+            font-weight: bold;
+        }
+
+        /* 댓글 내용 스타일 */
+        #comment-list td:nth-child(2) {
+            color: #555;
+        }
+
+        /* '수정' 링크 스타일 */
+        #comment-list td:nth-child(3) a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        #comment-list td:nth-child(3) a:hover {
+            text-decoration: underline;
+        }
+
+        /* 댓글 작성 영역 스타일 */
+        #comment-write {
+            margin-top: 20px;
+        }
+        #commentContents {
+            width: 80%;
+            padding: 10px;
+            margin-right: 10px;
+        }
+        #comment-write-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #comment-write-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
 </head>
 
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        //리뷰창에 등록회원을 남기기위해 userName을 가져옴
         /*<![CDATA[*/
         var userName = /*[[${member.name}]]*/ 'defaultUserName'; // 사용자 이름
         /*]]>*/
 
+        //리뷰 테이블에 작성버튼을 누르면 한 행씩 생성이 됨
         const commentWrite = () => {
             const contents = document.getElementById("commentContents").value;
             const id = [[${item.id}]];
@@ -35,7 +97,7 @@
                 success: function (res) {
                     console.log("요청성공", res);
 
-                    // 새로운 댓글만 테이블에 추가합니다.
+                    // 새로운 댓글만 테이블에 추가.
                     addCommentToTable(res);
 
                     document.getElementById('commentContents').value = '';
