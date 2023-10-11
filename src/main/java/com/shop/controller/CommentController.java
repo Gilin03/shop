@@ -21,16 +21,17 @@ public class CommentController {
 
 
     @PostMapping("/save")
-    public ResponseEntity save(@ModelAttribute CommentDTO commentDTO) {
+    public ResponseEntity<?> save(@ModelAttribute CommentDTO commentDTO) {
         System.out.println("commentDTO = " + commentDTO);
         Long saveResult = commentService.save(commentDTO);
         if (saveResult != null) {
-            List<CommentDTO> commentDTOList = commentService.findAll(commentDTO.getItemId());
-            return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
+            CommentDTO savedComment = commentService.findById(saveResult);
+            return new ResponseEntity<>(savedComment, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("해당 게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
         }
     }
+
 
     @GetMapping("/edit/{commentId}")
     public String editComment(@PathVariable Long commentId, Model model) {

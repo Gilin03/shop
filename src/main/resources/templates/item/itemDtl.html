@@ -16,12 +16,8 @@
         /*]]>*/
 
         const commentWrite = () => {
-            // const writer = document.getElementById("commentWriter").value;
             const contents = document.getElementById("commentContents").value;
-            // console.log("작성자: ", writer);
-            console.log("내용: ", contents);
             const id = [[${item.id}]];
-
             const token = $("meta[name='_csrf']").attr("content");
             const header = $("meta[name='_csrf_header']").attr("content");
 
@@ -39,16 +35,9 @@
                 success: function (res) {
                     console.log("요청성공", res);
 
-                    // 기존 댓글들을 지운다.
-                    $("#comment-list tr:not(:first)").remove();
+                    // 새로운 댓글만 테이블에 추가합니다.
+                    addCommentToTable(res);
 
-                    // 새로운 댓글을 테이블에 추가
-                    for (let i in res) {
-                        const comment = res[i];
-                        addCommentToTable(comment);
-                    }
-
-                    document.getElementById('commentWriter').value = '';
                     document.getElementById('commentContents').value = '';
                 },
                 error: function (err) {
@@ -66,11 +55,12 @@
 
             const cell1 = newRow.insertCell(0);
             const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
 
-
-            cell1.innerHTML = comment.commentContents;
-            cell2.innerHTML = comment.commentWriter;
-        }
+            cell1.innerHTML = comment.commentWriter;
+            cell2.innerHTML = comment.commentContents;
+            cell3.innerHTML = `<a href="/comment/edit/${comment.id}">수정</a>`;
+        };
 
 
 

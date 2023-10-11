@@ -49,6 +49,7 @@ public class CommentService {
         return CommentDTO.toCommentDTO(commentEntity, commentEntity.getItem().getId());
     }
 
+
     public List<CommentDTO> findByItemId(Long itemId) {
         List<CommentEntity> commentEntities = commentRepository.findByItemId(itemId);
 
