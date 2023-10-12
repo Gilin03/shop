@@ -6,19 +6,80 @@
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <style>
+        /* 테이블 스타일 */
+        #comment-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.15);
+        }
+        #comment-list th, #comment-list td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        #comment-list th {
+            background-color: #f8f8f8;
+        }
+        #comment-list tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* 댓글 작성자 스타일 */
+        #comment-list td:nth-child(1) {
+            font-weight: bold;
+        }
+
+        /* 댓글 내용 스타일 */
+        #comment-list td:nth-child(2) {
+            color: #555;
+        }
+
+        /* '수정' 링크 스타일 */
+        #comment-list td:nth-child(3) a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        #comment-list td:nth-child(3) a:hover {
+            text-decoration: underline;
+        }
+
+        /* 댓글 작성 영역 스타일 */
+        #comment-write {
+            margin-top: 20px;
+        }
+        #commentContents {
+            width: 80%;
+            padding: 10px;
+            margin-right: 10px;
+        }
+        #comment-write-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #comment-write-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
 </head>
 
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        //리뷰창에 등록회원을 남기기위해 userName을 가져옴
+        /*<![CDATA[*/
+        var userName = /*[[${member.name}]]*/ 'defaultUserName'; // 사용자 이름
+        /*]]>*/
 
+        //리뷰 테이블에 작성버튼을 누르면 한 행씩 생성이 됨
         const commentWrite = () => {
-            const writer = document.getElementById("commentWriter").value;
             const contents = document.getElementById("commentContents").value;
-            console.log("작성자: ", writer);
-            console.log("내용: ", contents);
             const id = [[${item.id}]];
-
             const token = $("meta[name='_csrf']").attr("content");
             const header = $("meta[name='_csrf_header']").attr("content");
 
@@ -26,7 +87,7 @@
                 type: "post",
                 url: "/comment/save",
                 data: {
-                    "commentWriter": writer,
+                    "commentWriter": userName,
                     "commentContents": contents,
                     "itemId": id
                 },
@@ -36,16 +97,9 @@
                 success: function (res) {
                     console.log("요청성공", res);
 
-                    // 기존 댓글들을 지운다.
-                    $("#comment-list tr:not(:first)").remove();
+                    // 새로운 댓글만 테이블에 추가.
+                    addCommentToTable(res);
 
-                    // 새로운 댓글을 테이블에 추가
-                    for (let i in res) {
-                        const comment = res[i];
-                        addCommentToTable(comment);
-                    }
-
-                    document.getElementById('commentWriter').value = '';
                     document.getElementById('commentContents').value = '';
                 },
                 error: function (err) {
@@ -64,13 +118,11 @@
             const cell1 = newRow.insertCell(0);
             const cell2 = newRow.insertCell(1);
             const cell3 = newRow.insertCell(2);
-            const cell4 = newRow.insertCell(3);
 
-            cell1.innerHTML = comment.id;
-            cell2.innerHTML = comment.commentWriter;
-            cell3.innerHTML = comment.commentContents;
-            cell4.innerHTML = comment.commentCreatedTime;
-        }
+            cell1.innerHTML = comment.commentWriter;
+            cell2.innerHTML = comment.commentContents;
+            cell3.innerHTML = `<a href="/comment/edit/${comment.id}">수정</a>`;
+        };
 
 
 
@@ -282,21 +334,31 @@
         <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15" width="800">
     </div>
 
-    <div id="comment-write">
-        <input type="text" id="commentWriter" placeholder="작성자">
-        <input type="text" id="commentContents" placeholder="내용">
-        <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
-    </div>
 
-    <table id="comment-list">
-        <tr>
-            <th>댓글번호</th>
-            <th>작성자</th>
-            <th>내용</th>
-            <th>작성시간</th>
-        </tr>
-        <!-- 기존 댓글 데이터가 있다면 서버로부터 받아 이곳에 렌더링 -->
-    </table>
+<!--        <input type="text" id="commentWriter" placeholder="작성자">-->
+        <div id="comment-write">
+            <input type="text" id="commentContents" placeholder="내용">
+            <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
+        </div>
+
+
+        <p><strong>Name:</strong> <span th:text="${member.name}"></span></p>
+
+
+
+        <table id="comment-list">
+            <tr>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>작업</th>
+            </tr>
+            <tr th:each="comment : ${comments}">
+                <td th:text="${comment.commentWriter}"></td>
+                <td th:text="${comment.commentContents}"></td>
+                <td>
+                    <a th:href="@{/comment/edit/{commentId}(commentId=${comment.id})}">수정</a>
+                </td>
+        </table>
 
     <h1>JQuery 달력</h1>
     <h2>Date Picker</h2>
