@@ -16,6 +16,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +64,19 @@ class ItemServiceTest {
         itemFormDto.setPrice(1000);
         itemFormDto.setStockNumber(100);
 
+        // 시작 날짜와 종료 날짜를 문자열로 설정
+        String classStartDateStr = "10/12/2023"; // 예시 날짜
+        String classEndDateStr = "10/18/2023";   // 예시 날짜
+
+        // 문자열을 LocalDate로 파싱
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate classStartDate = LocalDate.parse(classStartDateStr, dateFormatter);
+        LocalDate classEndDate = LocalDate.parse(classEndDateStr, dateFormatter);
+
+        // LocalDate로 설정
+        itemFormDto.setClassStartDate(classStartDate);
+        itemFormDto.setClassEndDate(classEndDate);
+
         List<MultipartFile> multipartFileList = createMultipartFiles();
         Long itemId = itemService.saveItem(itemFormDto, multipartFileList);
         List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
@@ -73,7 +89,11 @@ class ItemServiceTest {
         assertEquals(itemFormDto.getItemDetail(), item.getItemDetail());
         assertEquals(itemFormDto.getPrice(), item.getPrice());
         assertEquals(itemFormDto.getStockNumber(), item.getStockNumber());
+        assertEquals(classStartDate, itemFormDto.getClassStartDate()); // 예시 날짜와 비교
+        assertEquals(classEndDate, itemFormDto.getClassEndDate());   // 예시 날짜와 비교
         assertEquals(multipartFileList.get(0).getOriginalFilename(), itemImgList.get(0).getOriImgName());
     }
+
+
 
 }

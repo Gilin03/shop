@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.shop.dto.ItemImgDto;
@@ -35,9 +36,14 @@ public class ItemService {
     private final ItemImgRepository itemImgRepository;
 
     public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception{
-
         //상품 등록
         Item item = itemFormDto.createItem();
+
+        LocalDate classStartDate = itemFormDto.getClassStartDateAsLocalDate();
+        LocalDate classEndDate = itemFormDto.getClassEndDateAsLocalDate();
+        item.setClassStartDate(classStartDate);
+        item.setClassEndDate(classEndDate);
+
         itemRepository.save(item);
 
         //이미지 등록

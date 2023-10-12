@@ -6,6 +6,46 @@
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
 
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- jQuery UI CDN -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // 시작 날짜 선택기 초기화
+            $("#classStartDate").datepicker({
+                onSelect: function(dateText) {
+                    // 사용자가 날짜를 선택하면 이 함수가 호출됩니다.
+                    // 선택된 날짜를 서버로 보내고 저장 로직을 수행할 수 있습니다.
+                }
+            });
+
+            // 종료 날짜 선택기 초기화
+            $("#classEndDate").datepicker({
+                onSelect: function(dateText) {
+                    // 사용자가 날짜를 선택하면 이 함수가 호출됩니다.
+                    // 선택된 날짜를 서버로 보내고 저장 로직을 수행할 수 있습니다.
+                }
+            });
+
+            // 날짜 선택 버튼 클릭 시 시작 날짜 선택기 활성화
+            $("#datepicker-button1").click(function() {
+                $("#classStartDate").datepicker("show");
+            });
+
+            // 날짜 선택 버튼 클릭 시 종료 날짜 선택기 활성화
+            $("#datepicker-button2").click(function() {
+                $("#classEndDate").datepicker("show");
+            });
+        });
+    </script>
+
+
+
+
     <script th:inline="javascript">
         $(document).ready(function(){
             var errorMessage = [[${errorMessage}]];
@@ -74,6 +114,27 @@
                     th:value="${category}" th:text="${category.displayName}"></option>
         </select>
         </div>
+
+        <!-- 날짜 선택 버튼 -->
+        <!-- 시작 날짜 선택 -->
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">시작 날짜</span>
+            </div>
+            <input type="text" id="classStartDate" name="classStartDate" class="form-control" placeholder="시작 날짜를 선택해주세요">
+        </div>
+
+        <!-- 종료 날짜 선택 -->
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">종료 날짜</span>
+            </div>
+            <input type="text" id="classEndDate" name="classEndDate" class="form-control" placeholder="종료 날짜를 선택해주세요">
+        </div>
+
+
+
+
 
         <div class="input-group">
             <div class="input-group-prepend">

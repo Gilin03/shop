@@ -13,6 +13,10 @@ import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +43,12 @@ public class ItemController {
 
     @PostMapping(value = "/admin/item/new")
     public String itemNew(@Valid ItemFormDto itemFormDto, BindingResult bindingResult,
-                          Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList){
+                          Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
+                          @RequestParam("classStartDate") String classStartDateStr,
+                          @RequestParam("classEndDate") String classEndDateStr) {
+
+        itemFormDto.setClassStartDate(classStartDateStr);
+        itemFormDto.setClassEndDate(classEndDateStr);
 
         if(bindingResult.hasErrors()){
             return "item/itemForm";

@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import com.shop.dto.ItemFormDto;
 import com.shop.exception.OutOfStockException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,14 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category; // 카테고리
 
+
+    @Column(name = "class_start_date")
+    private LocalDate classStartDate;
+
+    @Column(name = "class_end_date")
+    private LocalDate classEndDate;
+
+
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList = new ArrayList<>();
 
@@ -55,6 +64,8 @@ public class Item extends BaseEntity {
         this.itemDetail = itemFormDto.getItemDetail();
         this.itemSellStatus = itemFormDto.getItemSellStatus();
         this.category = itemFormDto.getCategory();
+        this.classStartDate = itemFormDto.getClassStartDateAsLocalDate(); // 문자열에서 LocalDate로 변환
+        this.classEndDate = itemFormDto.getClassEndDateAsLocalDate(); // 문자열에서 LocalDate로 변환
     }
 
     public void removeStock(int stockNumber){

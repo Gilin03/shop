@@ -9,6 +9,9 @@ import org.modelmapper.ModelMapper;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,10 @@ public class ItemFormDto {
 
     private Category category;
 
+    private String classStartDate; // 문자열로 날짜를 저장할 필드
+
+    private String classEndDate;
+
 
     private ItemSellStatus itemSellStatus;
 
@@ -47,5 +54,33 @@ public class ItemFormDto {
     public static ItemFormDto of(Item item){
         return modelMapper.map(item,ItemFormDto.class);
     }
+
+    public void setClassStartDate(String classStartDate) {
+        this.classStartDate = classStartDate;
+    }
+
+    // 종료 날짜를 문자열로 설정
+    public void setClassEndDate(String classEndDate) {
+        this.classEndDate = classEndDate;
+    }
+
+    // 필요한 경우 문자열에서 LocalDate로 변환하여 반환
+    public LocalDate getClassStartDateAsLocalDate() {
+        if (classStartDate != null) {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            return LocalDate.parse(classStartDate, dateFormatter);
+        }
+        return null;
+    }
+
+    // 필요한 경우 문자열에서 LocalDate로 변환하여 반환
+    public LocalDate getClassEndDateAsLocalDate() {
+        if (classEndDate != null) {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            return LocalDate.parse(classEndDate, dateFormatter);
+        }
+        return null;
+    }
+
 
 }
