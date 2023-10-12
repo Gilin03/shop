@@ -74,8 +74,7 @@ class ItemServiceTest {
         LocalDate classEndDate = LocalDate.parse(classEndDateStr, dateFormatter);
 
         // LocalDate로 설정
-        itemFormDto.setClassStartDate(classStartDate);
-        itemFormDto.setClassEndDate(classEndDate);
+
 
         List<MultipartFile> multipartFileList = createMultipartFiles();
         Long itemId = itemService.saveItem(itemFormDto, multipartFileList);
