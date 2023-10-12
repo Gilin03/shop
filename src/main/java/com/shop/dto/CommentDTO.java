@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class CommentDTO {
     private Long id;
     private String commentWriter;
+    private String commentWriterEmail;
     private String commentContents;
     private Long itemId;
     private LocalDateTime commentCreatedTime;
@@ -33,6 +34,7 @@ public class CommentDTO {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setId(commentEntity.getId());
         commentDTO.setCommentWriter(commentEntity.getCommentWriter());
+        commentDTO.setCommentWriterEmail(commentEntity.getCommentWriterEmail());
         commentDTO.setCommentContents(commentEntity.getCommentContents());
         // 아래의 코드는 commentEntity에서 itemId를 얻을 수 있는 방법에 따라 수정이 필요할 수 있습니다.
         commentDTO.setItemId(commentEntity.getItem().getId());
